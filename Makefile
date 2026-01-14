@@ -1,29 +1,28 @@
 NAME = ft_nm
-
 CC = gcc
-
-CFLAGS = -Wall -Wextra -Werror Iincl -g3
+CFLAGS = -Wall -Werror -Wextra -g
 
 RM = rm -f
-
 LIB = ar rcs
 
-SRCS = 
+SRC = src/main.c src/aux.c src/ft_struct.c src/format.c src/parsheader.c src/endian_utils.c src/ft_print.c \
+		src/readheader.c src/parssymbols.c src/auxtwo.c src/extrac_symbol.c src/tilter.c src/symsort.c \
+		src/output_nm.c src/auxthree.c src/process_elf.c src/ft_atoi_base.c
 
-OBJTS = $(SRCS:.c=.o)
+OBJS = $(SRC:.c=.o)
 
 all: $(NAME)
 
-$(NAME): $(OBJTS)
-	$(CC) $(CFLAGS) -o $(NAME) $(OBJTS)
+$(NAME): $(OBJS)
+		$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 clean:
-	$(RM) $(OBJTS)
+	$(RM) $(OBJS)
 
 fclean: clean
+	$(RM) $(OBJS)
 	$(RM) $(NAME)
-	$(RM) $(OBJTS)
 
-re: all clean
+re: fclean all
 
 .PHONY: all clean fclean re

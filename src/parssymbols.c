@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 char  *get_symbol_name(uint32_t offset_name, void *strtab_ptr, size_t strtab_size)
 {

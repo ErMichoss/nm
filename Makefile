@@ -14,13 +14,12 @@ OBJS = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
+		$(CC) $(CFLAGS) -Iincl -o $(NAME) $(OBJS)
 
 clean:
 	$(RM) $(OBJS)
 
 fclean: clean
-	$(RM) $(OBJS)
 	$(RM) $(NAME)
 
 re: fclean all

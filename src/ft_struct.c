@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 int findflags(char *str)
 {

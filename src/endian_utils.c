@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 t_host_endianness g_host_endianness = HOST_ENDIAN_UNKNOWN;
 

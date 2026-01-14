@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 void print_stack_files(t_stack_file *sfile)
 {

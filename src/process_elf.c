@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 char    *clean_ar_name(const char *raw_name)
 {

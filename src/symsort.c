@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 bool compare_symbols(t_symbol_info *a, t_symbol_info *b)
 {

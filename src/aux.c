@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 int     ft_strcmp(const char *s1, char *s2)
 {
@@ -85,4 +85,32 @@ void    handle_file_error_two(char *program_name, char *file_name, char *str)
         putstr_stderr(str);
         write(2, "\n", 1);
     }
+}
+
+int is_valid_binary(const char *filename)
+{
+    int fd;
+    unsigned char buffer[8];
+    ssize_t bytes_read;
+    
+    fd = open(filename, O_RDONLY);
+    if (fd == -1)
+        return (0);
+    
+    bytes_read = read(fd, buffer, 8);
+    close(fd);
+    
+    if (bytes_read < 4)
+        return (0);
+    
+    // Verificar ELF
+    if (buffer[0] == 0x7F && buffer[1] == 'E' && 
+        buffer[2] == 'L' && buffer[3] == 'F')
+        return (1);
+    
+    // Verificar archivo .a
+    if (bytes_read >= 8 && ft_memcmp(buffer, ARMAG, 8) == 0)
+        return (1);
+    
+    return (0);
 }

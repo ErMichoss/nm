@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 void    *ft_memcpy(void *dst, const void *src, size_t n)
 {

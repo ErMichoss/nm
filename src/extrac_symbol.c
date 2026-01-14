@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 char    assign_type_from_section(char *name, uint64_t flags, bool lower)
 {

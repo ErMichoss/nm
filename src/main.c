@@ -1,7 +1,6 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
-int     checkarg(char *file_name)
-{
+int     checkarg(char *file_name) {
     struct stat my_file_info;
     int         fd;
     int         success;
@@ -11,7 +10,7 @@ int     checkarg(char *file_name)
     fd = open(file_name, O_RDONLY);
     if (fd == -1)
         return (errno == EISDIR ? -2 : -1);
-    success = fstat(fd, &my_file_info); //(file status) Llamada al sistema POSIX para obtener los metadatos de un archivo.
+    success = fstat(fd, &my_file_info);
     if (success == -1)
     {
         close(fd);
@@ -27,8 +26,7 @@ int     checkarg(char *file_name)
     return (1);
 }
 
-void    create_list(t_stack_file **sfile, char **str, int *flag)
-{
+void    create_list(t_stack_file **sfile, char **str, int *flag) {
     int i = 0;
     int validity = 1;
 
@@ -44,23 +42,72 @@ void    create_list(t_stack_file **sfile, char **str, int *flag)
     return;
 }
 
-int main(int argc, char **argv)
-{
+int find_binaries(char*** binaries) {
+    DIR* dir;
+    struct dirent* entry;
+    struct stat st;
+    int count = 0;
+    int i = 0;
+
+    dir = opendir(".");
+    if (!dir)
+        return (1);
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+        if (stat(entry->d_name, &st) != 0 || !S_ISREG(st.st_mode))
+            continue;
+        if (is_valid_binary(entry->d_name))
+            count++;
+    }
+
+    *binaries = (char**)malloc((count + 1) * sizeof(char*));
+    if (!*binaries) {
+        closedir(dir);
+        return (1);
+    }
+
+    rewinddir(dir);
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+        if (stat(entry->d_name, &st) != 0 || !S_ISREG(st.st_mode))
+            continue;
+        if (is_valid_binary(entry->d_name)) {
+            (*binaries)[i] = ft_strdup(entry->d_name);
+            if (!(*binaries)[i]) {
+                closedir(dir);
+                return (1);
+            }
+            i++;
+        }
+    }
+    (*binaries)[i] = NULL;
+    closedir(dir);
+    return (0);
+}
+
+int main(int argc, char **argv) {
     t_stack_file    *sfile;
     int             flag;
+	char** binaries;
 
     sfile = NULL;
     flag = 0;
+	init_host_endianness();
     if (argc == 1)
     {
-        putstr_stderr("ft_nm: «a.out»: No such file\n");
-        return (1);
-    }
-    init_host_endianness();
-    argv++;
-    create_list(&sfile, argv, &flag);
+		if (find_binaries(&binaries) == 1){
+			putstr_stderr("ft_nm: «a.out»: No such file\n");
+        	return (1);
+		}
+    } else {
+		argv++;
+		create_list(&sfile, argv, &flag);
+	}
     flag = 0;
-    fileFormat_id(&sfile, flag);        // Identifica 32/64 bits y endianness
+    file_format_id(&sfile, flag);
     process_file_list(&sfile); 
     ft_output(&sfile, argc);
     

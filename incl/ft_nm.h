@@ -11,6 +11,7 @@
 # include <sys/stat.h>
 # include <errno.h>
 # include <stdint.h>
+# include <dirent.h>
 # include <elf.h>
 # include <byteswap.h>
 # include <sys/mman.h>
@@ -111,22 +112,13 @@ typedef struct s_stack_file
     struct s_stack_file     *next;
 }   t_stack_file;
 
-//*** Functions to reverse the order of bytes ***
 uint16_t        swap16(uint16_t val);
 uint32_t        swap32(uint32_t val);
 uint64_t        swap64(uint64_t val);
-
-//*** Generic functions to obtain ELF values applying swap if necessary ***
 uint16_t        get_elf_u16(uint16_t val_from_elf, t_endianness file_endianness);
 uint32_t        get_elf_u32(uint32_t val_from_elf, t_endianness file_endianness);
 uint64_t        get_elf_u64(uint64_t val_from_elf, t_endianness file_endianness);
-
-//*** Function to determine the endianness of the host ***
-
 void            init_host_endianness(void);
-
-//*** auxiliary functions ***
-
 void            putstr_stderr(char *str);
 void            handle_file_error(char *program_name, char *file_name, int errnum);
 void            handle_file_error_two(char *program_name, char *file_name, char *str);
@@ -150,9 +142,6 @@ int             ft_isspace(char c);
 int             ft_isvalid(char c, int base);
 int	            ft_value_of(char c);
 int             ft_strncmp(const char *s1, const char *s2, size_t n);
-
-//*** struct functions ***
-
 t_stack_file    *create_node(char *str, int pos, int status);
 t_symbol_info   *create_symbnode(char *name, uint64_t value, unsigned char st_info, uint16_t shndx);
 void            stack_node(t_stack_file **sfile, t_stack_file *new);
@@ -160,10 +149,7 @@ void            stack_symbnode(t_symbol_info **list, t_symbol_info *new);
 void            print_stack_files(t_stack_file *sfile);
 void            clear_closing(t_stack_file **sfiles);
 void            clear_symbol_list(t_symbol_info **list);
-
-//*** explicit functions ***
-
-void            fileFormat_id(t_stack_file **sfile, int flag);
+void            file_format_id(t_stack_file **sfile, int flag);
 void            parsing_header(t_stack_file **files);
 void            location_headings(t_stack_file **files);
 void            location_names(t_stack_file **files);
@@ -186,10 +172,10 @@ int             ignore_underscores(char *a, char *b);
 int             stripped_char(char c);
 int             compare_symbol_names(t_symbol_info *a, t_symbol_info *b);
 int             get_type_sort_priority(char type_char);
-
-//*** FunctionS Static Bianry ***
+int				find_binaries(char*** binaries);
 void            process_file_list(t_stack_file **sfile);
 void            process_static_archive(t_stack_file *sfile);
 void            process_elf_file(t_stack_file *sfile);
+int				is_valid_binary(const char *filename)
 
 #endif

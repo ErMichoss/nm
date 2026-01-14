@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 
 const char  *get_section_name(uint32_t offset_name, void *shstrtab_ptr, size_t shstrtab_size)
 {

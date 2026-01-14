@@ -1,4 +1,4 @@
-#include "../incl/ft_nm.h"
+#include "ft_nm.h"
 #include <sys/mman.h>
 
 void    get_flags(char *file, t_nmflags *flag)
@@ -39,7 +39,7 @@ void    find_bits(unsigned char *elf, t_stack_file *aux)
         aux->validity = 0;
 }
 
-void    fileFormat_id(t_stack_file **sfile, int flag)
+void    file_format_id(t_stack_file **sfile, int flag)
 {
     struct stat     my_file_info;
     t_stack_file    *aux;

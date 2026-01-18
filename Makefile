@@ -1,6 +1,6 @@
 NAME = ft_nm
 CC = gcc
-CFLAGS = -Wall -Werror -Wextra -g
+CFLAGS = -Wall -Werror -Wextra -g -Iincl
 
 RM = rm -f
 LIB = ar rcs
@@ -14,7 +14,7 @@ OBJS = $(SRC:.c=.o)
 all: $(NAME)
 
 $(NAME): $(OBJS)
-		$(CC) $(CFLAGS) -Iincl -o $(NAME) $(OBJS)
+		$(CC) $(CFLAGS) -o $(NAME) $(OBJS)
 
 clean:
 	$(RM) $(OBJS)

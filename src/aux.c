@@ -87,7 +87,7 @@ void    handle_file_error_two(char *program_name, char *file_name, char *str)
     }
 }
 
-int is_valid_binary(const char *filename)
+/*int is_valid_binary(const char *filename)
 {
     int fd;
     unsigned char buffer[8];
@@ -113,4 +113,4 @@ int is_valid_binary(const char *filename)
         return (1);
     
     return (0);
-}
+}*/

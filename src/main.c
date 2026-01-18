@@ -42,7 +42,7 @@ void    create_list(t_stack_file **sfile, char **str, int *flag) {
     return;
 }
 
-int find_binaries(char*** binaries) {
+/*int find_binaries(char*** binaries) {
     DIR* dir;
     struct dirent* entry;
     struct stat st;
@@ -86,22 +86,47 @@ int find_binaries(char*** binaries) {
     (*binaries)[i] = NULL;
     closedir(dir);
     return (0);
+}*/
+
+int find_binaries() {
+    DIR* dir;
+    struct dirent* entry;
+    struct stat st;
+    int flag = 1;
+
+    dir = opendir(".");
+    if (!dir)
+        return (1);
+
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+        if (stat(entry->d_name, &st) != 0 || !S_ISREG(st.st_mode))
+            continue;
+        if (strcmp(entry->d_name, "a.out") == 0)
+            flag = 0;
+    }
+
+    return flag;
 }
 
 int main(int argc, char **argv) {
     t_stack_file    *sfile;
     int             flag;
-	char** binaries;
 
     sfile = NULL;
     flag = 0;
 	init_host_endianness();
     if (argc == 1)
     {
-		if (find_binaries(&binaries) == 1){
+		if (find_binaries() == 1){
 			putstr_stderr("ft_nm: «a.out»: No such file\n");
         	return (1);
 		}
+        char* arg[2];
+        arg[0] = "a.out";
+        arg[1] = NULL;
+        create_list(&sfile, arg, &flag);
     } else {
 		argv++;
 		create_list(&sfile, argv, &flag);

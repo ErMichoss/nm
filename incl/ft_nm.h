@@ -172,10 +172,10 @@ int             ignore_underscores(char *a, char *b);
 int             stripped_char(char c);
 int             compare_symbol_names(t_symbol_info *a, t_symbol_info *b);
 int             get_type_sort_priority(char type_char);
-int				find_binaries(char*** binaries);
+int				find_binaries();
 void            process_file_list(t_stack_file **sfile);
 void            process_static_archive(t_stack_file *sfile);
 void            process_elf_file(t_stack_file *sfile);
-int				is_valid_binary(const char *filename)
+//int				is_valid_binary(const char *filename);
 
 #endif

@@ -36,9 +36,9 @@ int ignore_underscores(char *a, char *b)
 
     while (true)
     {
-        while (*a != '\0' && !is_alphanum(*a))
+        while (*a != '\0' && !is_alphanum(*a) && *a != '.')
             a++;
-        while (*b != '\0' && !is_alphanum(*b))
+        while (*b != '\0' && !is_alphanum(*b) && *b != '.')
             b++;
         
         x = stripped_char(*a);
@@ -75,18 +75,21 @@ void    tilter_collecting(t_stack_file **file)
             while (sym)
             {   
                 sym->visible = true;
-
                 if (aux->bits == BITS_32) {
                     sym_type = ELF32_ST_TYPE(sym->st_info);
                 } else {
                     sym_type = ELF64_ST_TYPE(sym->st_info);
                 }
-                if (sym_type == STT_FILE){
+                if (sym_type == STT_FILE && !(aux->flag & NM_FLAG_A)){
                     sym->visible = false;
-                } else if (!sym->name || sym->name[0] == '\0') {
+                } else if (!sym->name || sym->name[0] == '\0')
+                {
                     if (sym->char_type != 'A' && sym->char_type != 'a')
-                        sym->visible = false;
-                }   
+                    {
+                        if (!(aux->flag & NM_FLAG_A) || sym_type != STT_SECTION)
+                            sym->visible = false;
+                    }
+                } 
                 sym = sym->next;
             }
         }

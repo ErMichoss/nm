@@ -35,6 +35,13 @@ void    parsing_symbol_ent(t_stack_file **file)
                     unsigned char st_info = sym->st_info;
 
                     symbol_name = get_symbol_name(st_name_offset, aux->strtab_ptr, aux->strtab_size);
+
+                    if (ELF32_ST_TYPE(st_info) == STT_SECTION && st_shndx < aux->elf32_header->e_shnum)
+                    {
+                        Elf32_Shdr *shdr = &aux->elf32_sh_table[st_shndx];
+                        symbol_name = (char *)(aux->shstrtab_ptr + get_elf_u32(shdr->sh_name, aux->endianness));
+                    }
+
                     stack_symbnode(&aux->symbol_list, create_symbnode(symbol_name, st_value, st_info, st_shndx));
                 }
             }
@@ -52,6 +59,13 @@ void    parsing_symbol_ent(t_stack_file **file)
                     unsigned char st_info = sym->st_info;
 
                     symbol_name = get_symbol_name(st_name_offset, aux->strtab_ptr, aux->strtab_size);
+
+                    if (ELF64_ST_TYPE(st_info) == STT_SECTION && st_shndx < aux->elf64_header->e_shnum)
+                    {
+                        Elf64_Shdr *shdr = &aux->elf64_sh_table[st_shndx];
+                        symbol_name = (char *)(aux->shstrtab_ptr + get_elf_u32(shdr->sh_name, aux->endianness));
+                    }
+
                     stack_symbnode(&aux->symbol_list, create_symbnode(symbol_name, st_value, st_info, st_shndx));
                 }
             }

@@ -149,7 +149,7 @@ void            stack_symbnode(t_symbol_info **list, t_symbol_info *new);
 void            print_stack_files(t_stack_file *sfile);
 void            clear_closing(t_stack_file **sfiles);
 void            clear_symbol_list(t_symbol_info **list);
-void            file_format_id(t_stack_file **sfile, int flag);
+void            file_format_id(t_stack_file **sfile);
 void            parsing_header(t_stack_file **files);
 void            location_headings(t_stack_file **files);
 void            location_names(t_stack_file **files);
@@ -176,6 +176,5 @@ int				find_binaries();
 void            process_file_list(t_stack_file **sfile);
 void            process_static_archive(t_stack_file *sfile);
 void            process_elf_file(t_stack_file *sfile);
-//int				is_valid_binary(const char *filename);
 
 #endif

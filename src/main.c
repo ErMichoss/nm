@@ -23,7 +23,7 @@ int     checkarg(char *file_name) {
     return (1);
 }
 
-void    create_list(t_stack_file **sfile, char **str, int *flag) {
+void    create_list(t_stack_file **sfile, char **str) {
     int         i;
     int         validity;
     t_nmflags   active_flags;
@@ -55,8 +55,6 @@ void    create_list(t_stack_file **sfile, char **str, int *flag) {
         if (!findflags(str[i]))
         {
             validity = checkarg(str[i]);
-            if (!validity)
-                *flag += 1;
             t_stack_file *node = create_node(str[i], i, validity);
             node->flag = active_flags;
             stack_node(sfile, node);
@@ -89,10 +87,8 @@ int find_binaries() {
 
 int main(int argc, char **argv) {
     t_stack_file    *sfile;
-    int             flag;
 
     sfile = NULL;
-    flag = 0;
 	init_host_endianness();
     if (argc == 1)
     {
@@ -103,13 +99,12 @@ int main(int argc, char **argv) {
         char* arg[2];
         arg[0] = "a.out";
         arg[1] = NULL;
-        create_list(&sfile, arg, &flag);
+        create_list(&sfile, arg);
     } else {
 		argv++;
-		create_list(&sfile, argv, &flag);
+		create_list(&sfile, argv);
 	}
-    flag = 0;
-    file_format_id(&sfile, flag);
+    file_format_id(&sfile);
     process_file_list(&sfile); 
     ft_output(&sfile, argc);
     

@@ -39,15 +39,17 @@ void    find_bits(unsigned char *elf, t_stack_file *aux)
         aux->validity = 0;
 }
 
-void    file_format_id(t_stack_file **sfile, int flag)
+void    file_format_id(t_stack_file **sfile)
 {
     struct stat     my_file_info;
     t_stack_file    *aux;
     unsigned char   *elf;
     int             success;
     int             fd;
+    int             flag;
 
     aux = *sfile;
+    flag = 0;
     while (aux)
     {
         if (aux->validity == 1 && aux->type == ARG_TYPE_FILE)

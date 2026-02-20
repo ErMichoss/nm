@@ -2,18 +2,23 @@
 
 char    assign_type_from_section(char *name, uint64_t flags, bool lower)
 {
+    if (ft_strncmp(name, ".debug", 6) == 0 || ft_strcmp(name, ".comment") == 0
+        || ft_strncmp(name, ".note", 5) == 0)
+        return ('N');
     if (ft_strcmp(name, ".text") == 0 || (flags & SHF_EXECINSTR))
         return ((lower) ? 't' : 'T');
     if (ft_strcmp(name, ".bss") == 0 || ft_strcmp(name, ".tbss") == 0)
         return ((lower) ? 'b' : 'B');
     if (flags & SHF_TLS)
         return ((lower) ? 'g' : 'G');
+    if (ft_strcmp(name, ".sdata") == 0 || ft_strcmp(name, ".sbss") == 0)
+        return ((lower) ? 's' : 'S');
     if (ft_strcmp(name, ".data") == 0 || ft_strcmp(name, ".got") == 0 || 
         ft_strcmp(name, ".data.rel.ro") == 0 || (flags & SHF_WRITE))
         return ((lower) ? 'd' : 'D');
     if (ft_strcmp(name, ".rodata") == 0 || (flags & SHF_MERGE) || ((flags & SHF_ALLOC) && !(flags & SHF_WRITE)))
         return ((lower) ? 'r' : 'R');
-    return ((lower) ? '?' : '?'); // Si llega aquí, es un caso no cubierto.
+    return ((lower) ? 'n' : 'N');
 }
 
 void    analyze_section(t_symbol_info *sym, t_stack_file *aux, uint8_t bind, uint16_t shndx)
@@ -94,7 +99,7 @@ void    determine_symbol_type(t_symbol_info *sym, t_stack_file *aux, uint8_t typ
     //5. SECTION / FILE
     if (type == STT_SECTION)
     {
-        sym->char_type = (lower) ? 's' : 'S';
+        analyze_section(sym, aux, bind, shndx);
         return;
     }
 

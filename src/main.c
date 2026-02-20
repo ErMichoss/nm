@@ -5,8 +5,6 @@ int     checkarg(char *file_name) {
     int         fd;
     int         success;
     
-    if (findflags(file_name))
-        return (1);
     fd = open(file_name, O_RDONLY);
     if (fd == -1)
         return (errno == EISDIR ? -2 : -1);
@@ -21,72 +19,51 @@ int     checkarg(char *file_name) {
         close(fd);
         return (-2);
     }
-    
     close(fd);
     return (1);
 }
 
 void    create_list(t_stack_file **sfile, char **str, int *flag) {
-    int i = 0;
-    int validity = 1;
+    int         i;
+    int         validity;
+    t_nmflags   active_flags;
+
+    i = 0;
+    active_flags = NM_ARG_FILE;
 
     while (str[i] != NULL)
-    {   
-        validity = checkarg(str[i]);
-        if (!validity)
-            *flag += 1;
-        stack_node(sfile, create_node(str[i], i, validity));
-        validity = 1;
+    {
+        if (findflags(str[i]))
+        {
+            if (ft_strcmp(str[i], "-a") == 0)
+                active_flags |= NM_FLAG_A;
+            else if (ft_strcmp(str[i], "-g") == 0)
+                active_flags |= NM_FLAG_G;
+            else if (ft_strcmp(str[i], "-u") == 0)
+                active_flags |= NM_FLAG_U;
+            else if (ft_strcmp(str[i], "-r") == 0)
+                active_flags |= NM_FLAG_R;
+            else if (ft_strcmp(str[i], "-p") == 0)
+                active_flags |= NM_FLAG_P;
+        }
         i++;
     }
-    return;
-}
 
-/*int find_binaries(char*** binaries) {
-    DIR* dir;
-    struct dirent* entry;
-    struct stat st;
-    int count = 0;
-    int i = 0;
-
-    dir = opendir(".");
-    if (!dir)
-        return (1);
-
-    while ((entry = readdir(dir)) != NULL) {
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-            continue;
-        if (stat(entry->d_name, &st) != 0 || !S_ISREG(st.st_mode))
-            continue;
-        if (is_valid_binary(entry->d_name))
-            count++;
-    }
-
-    *binaries = (char**)malloc((count + 1) * sizeof(char*));
-    if (!*binaries) {
-        closedir(dir);
-        return (1);
-    }
-
-    rewinddir(dir);
-    while ((entry = readdir(dir)) != NULL) {
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-            continue;
-        if (stat(entry->d_name, &st) != 0 || !S_ISREG(st.st_mode))
-            continue;
-        if (is_valid_binary(entry->d_name)) {
-            (*binaries)[i] = ft_strdup(entry->d_name);
-            if (!(*binaries)[i]) {
-                closedir(dir);
-                return (1);
-            }
-            i++;
+    i = 0;
+    while (str[i] != NULL)
+    {
+        if (!findflags(str[i]))
+        {
+            validity = checkarg(str[i]);
+            if (!validity)
+                *flag += 1;
+            t_stack_file *node = create_node(str[i], i, validity);
+            node->flag = active_flags;
+            stack_node(sfile, node);
         }
+        i++;
     }
-    (*binaries)[i] = NULL;
-    closedir(dir);
-    return (0);
-}*/
+}
 
 int find_binaries() {
     DIR* dir;

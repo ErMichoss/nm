@@ -76,14 +76,14 @@ void    tilter_collecting(t_stack_file **file)
             {   
                 sym->visible = true;
 
-                if (aux->bits == BITS_32)
+                if (aux->bits == BITS_32) {
                     sym_type = ELF32_ST_TYPE(sym->st_info);
-                else
+                } else {
                     sym_type = ELF64_ST_TYPE(sym->st_info);
-                if (sym_type == STT_FILE)
+                }
+                if (sym_type == STT_FILE){
                     sym->visible = false;
-                else if (!sym->name || sym->name[0] == '\0')
-                {
+                } else if (!sym->name || sym->name[0] == '\0') {
                     if (sym->char_type != 'A' && sym->char_type != 'a')
                         sym->visible = false;
                 }   

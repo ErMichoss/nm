@@ -41,10 +41,7 @@ t_stack_file    *create_node(char *str, int pos, int status)
     new->file = str;
     new->position = pos + 1;
     new->validity = status;
-    if (findflags(str))
-        new->type = ARG_TYPE_FLAG;
-    else
-        new->type = ARG_TYPE_FILE;
+    new->type = ARG_TYPE_FILE;
     new->symbol_list = NULL;
     new->next = NULL;
     new->file_content_ptr = NULL;

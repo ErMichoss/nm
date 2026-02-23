@@ -98,7 +98,32 @@ void    ordering_symbols(t_stack_file **file)
     while (aux)
     {
         if (aux->validity == 1 && aux->elf == 1 && aux->symbol_list != NULL)
-            merge_sort(&aux->symbol_list);
+        {
+            if (!(aux->flag & NM_FLAG_P)) {
+                merge_sort(&aux->symbol_list);
+                if (aux->flag & NM_FLAG_R)
+                    reverse_list(&aux->symbol_list);
+            }
+        }
         aux = aux->next;
     }
+
+}
+
+void    reverse_list(t_symbol_info **list)
+{
+    t_symbol_info   *prev;
+    t_symbol_info   *current;
+    t_symbol_info   *next;
+
+    prev = NULL;
+    current = *list;
+    while (current)
+    {
+        next = current->next;
+        current->next = prev;
+        prev = current;
+        current = next;
+    }
+    *list = prev;
 }

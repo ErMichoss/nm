@@ -80,16 +80,28 @@ void    tilter_collecting(t_stack_file **file)
                 } else {
                     sym_type = ELF64_ST_TYPE(sym->st_info);
                 }
-                if (sym_type == STT_FILE && !(aux->flag & NM_FLAG_A)){
+
+                uint8_t bind;
+                if (aux->bits == BITS_32)
+                    bind = ELF32_ST_BIND(sym->st_info);
+                else
+                    bind = ELF64_ST_BIND(sym->st_info);
+
+                if (sym_type == STT_FILE && !(aux->flag & NM_FLAG_A))
                     sym->visible = false;
-                } else if (!sym->name || sym->name[0] == '\0')
+                else if (sym_type == STT_SECTION && !(aux->flag & NM_FLAG_A))
+                    sym->visible = false;
+                else if (!sym->name || sym->name[0] == '\0')
                 {
                     if (sym->char_type != 'A' && sym->char_type != 'a')
-                    {
-                        if (!(aux->flag & NM_FLAG_A) || sym_type != STT_SECTION)
-                            sym->visible = false;
-                    }
-                } 
+                        sym->visible = false;
+                }
+                
+                if ((aux->flag & NM_FLAG_G) && bind == STB_LOCAL)
+                    sym->visible = false;
+
+                if ((aux->flag & NM_FLAG_U) && sym->shndx != SHN_UNDEF)
+                    sym->visible = false;
                 sym = sym->next;
             }
         }

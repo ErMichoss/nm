@@ -176,5 +176,6 @@ int				find_binaries();
 void            process_file_list(t_stack_file **sfile);
 void            process_static_archive(t_stack_file *sfile);
 void            process_elf_file(t_stack_file *sfile);
+void            reverse_list(t_symbol_info **list);
 
 #endif
